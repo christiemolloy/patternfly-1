@@ -112,6 +112,15 @@
   --pf-c-dropdown--c-divider--MarginTop: var(--pf-global--spacer--sm);
   --pf-c-dropdown--c-divider--MarginBottom: var(--pf-global--spacer--sm);
 
+  // Drilldown
+  --pf-c-dropdown__drilldown--Width: 250px;
+  --pf-c-dropdown__menu-item--m-drilldown-control--ColumnGap: var(--pf-global--gutter--md);
+
+  // Submenu
+  --pf-c-drowdown__submenu--Transition: var(--pf-global--Transition);
+  --pf-c-drowdown__submenu--li--Transition: var(--pf-global--Transition);
+  --pf-c-drowdown--m-active-path__submenu--ZIndex: var(--pf-global--ZIndex--2xl);
+
   position: relative;
   display: inline-block;
   max-width: 100%;
@@ -363,6 +372,66 @@
 
     transform: translateY(var(--pf-c-dropdown--m-top__menu--TranslateY));
   }
+
+  &.pf-m-drilldown {
+    width: var(--pf-c-dropdown__drilldown--Width);
+    height: var(--pf-c-dropdown--m-drilldown--Height);
+    overflow: hidden;
+    transition: .3s;
+  }
+}
+
+.pf-c-dropdown__submenu {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding-top: var(--pf-c-dropdown__menu--PaddingTop);
+  padding-bottom: var(--pf-c-dropdown__menu--PaddingBottom);
+  list-style-type: none;
+  background-color: var(--pf-c-dropdown__menu--BackgroundColor);
+  transition: var(--pf-c-drowdown__submenu--Transition);
+
+  li {
+    transition: var(--pf-c-drowdown__submenu--li--Transition);
+  }
+
+  & & {
+    transform: translateX(100%);
+  }
+
+  &.pf-m-drilled-in > :not(.pf-m-active-path) {
+    opacity: 0;
+  }
+
+  &.pf-m-drilled-in {
+    transform: translateX(0);
+
+    &.pf-m-active > * {
+      opacity: 1;
+    }
+  }
+
+  &.pf-m-active {
+    transform: translateX(100%);
+
+    .pf-c-dropdown__submenu {
+      transform: translateX(100%);
+    }
+  }
+
+  &.pf-m-root {
+    transform: translateX(0);
+
+    &.pf-m-drilled-in {
+      transform: translateX(-100%);
+    }
+  }
+
+  // flag the known path and set z-index
+  .pf-m-active-path & {
+    z-index: var(--pf-c-drowdown--m-active-path__submenu--ZIndex);
+  }
 }
 
 .pf-c-dropdown__menu-item {
@@ -415,6 +484,17 @@
     &:hover,
     &:focus {
       --pf-c-dropdown__menu-item--BackgroundColor: transparent;
+    }
+  }
+
+  &.pf-m-control {
+    display: grid;
+    grid-template-columns: auto max-content;
+    column-gap: var(--pf-c-dropdown__menu-item--m-drilldown-control--ColumnGap);
+    align-items: baseline;
+
+    &.pf-m-back {
+      grid-template-columns: max-content auto;
     }
   }
 }

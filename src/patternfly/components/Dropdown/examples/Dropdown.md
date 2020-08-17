@@ -6,7 +6,110 @@ cssPrefix: pf-c-dropdown
 
 import './Dropdown.css'
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    $(function() {
+      $("[drill-down]").click(function() {
+        $('ul').removeClass("pf-m-active");
+        $(this).next(".pf-c-dropdown__submenu").addClass("pf-m-active");
+        $(this).next(".pf-c-dropdown__submenu").removeAttr("hidden");
+        $("#dropdown__menu").css("height", $(this).next(".pf-c-dropdown__submenu").outerHeight());
+
+        // parent ul
+        $(this).parent().parent().addClass("pf-m-drilled-in");
+        $(this).parent().addClass("pf-m-active-path");
+
+        // set active path for branch
+        $(this).parent().siblings('li').removeClass("pf-m-active-path");
+        $(this).parent().siblings('li').children('li').removeClass("pf-m-active-path");
+      });
+
+      $("[drill-up]").click(function() {
+        $(this).parent().parent().removeClass("pf-m-active");
+        $(this).next(".pf-c-dropdown__submenu").removeClass("pf-m-active");
+
+        // parent ul
+        $(this).parent().parent().removeClass("pf-m-drilled-in");
+
+        $("#dropdown__menu").css("height", $(this).parent().parent().parent().parent("ul").outerHeight());
+
+        if ($(this).parent().parent().parent().parent('ul').hasClass("pf-m-root")) {
+          $(this).parent().parent().parent().parent().removeClass("pf-m-drilled-in");
+        } else {
+          // set active path for branch
+          $(this).parent().parent().parent().parent("ul").addClass("pf-m-active");
+        }
+      });
+    });
+  });
+</script>
+
 ## Examples
+
+### Drilldown
+```hbs
+{{#> dropdown dropdown--id="dropdown-drilldown" id="dropdown-drilldown" dropdown--IsCustom="true" dropdown--IsExpanded="true" dropdown--HasToggleIcon="true"}}
+  {{#> dropdown-toggle}}
+    {{#> dropdown-toggle-text}}
+      Drilldown
+    {{/dropdown-toggle-text}}
+  {{/dropdown-toggle}}
+  {{#> dropdown-menu-base dropdown-menu--modifier="pf-m-drilldown" dropdown-menu--attribute='style="height: 176px" id="dropdown__menu"' dropdown-menu--type="div"}}
+    {{#> dropdown-submenu dropdown-submenu--attribute='id="root"' dropdown-submenu--modifier="pf-m-root"}}
+      <li>{{#> dropdown-menu-item dropdown-menu-item--type="a" dropdown-menu-item--attribute='href="#"'}}Action 1{{/dropdown-menu-item}}</li>
+      <li>
+        {{#> dropdown-menu-item dropdown-menu-item--IsControl="true" dropdown-menu-item--id="back-to-menu-1"}}Drilldown 1 List A{{/dropdown-menu-item}}
+        {{#> dropdown-submenu dropdown-submenu--IsCollapsed="true" dropdown-submenu--attribute='id="#1"' dropdown-submenu--modifier="" }}
+          <li>{{#> dropdown-menu-item dropdown-menu-item--IsControl="true" dropdown-menu-item--id="back-to-menu-2" dropdown-menu-item--IsDrillUp="true"}}Back to menu 1{{/dropdown-menu-item}}</li>
+          {{> divider divider--type="li"}}
+          <li>{{#> dropdown-menu-item}}Drilldown 1.1 List A{{/dropdown-menu-item}}</li>
+          <li>{{#> dropdown-menu-item}}Drilldown 1.2 List A{{/dropdown-menu-item}}</li>
+          <li>
+            {{#> dropdown-menu-item dropdown-menu-item--IsControl="true" dropdown-menu-item--id="back-to-menu-3"}}Drilldown 1.3 List A{{/dropdown-menu-item}}
+            {{#> dropdown-submenu  dropdown-submenu--attribute='id="#1.1"'}}
+              <li>{{#> dropdown-menu-item dropdown-menu-item--IsControl="true" dropdown-menu-item--id="back-to-menu-4" dropdown-menu-item--IsDrillUp="true"}}Back to menu 1{{/dropdown-menu-item}}</li>
+              <li>{{#> dropdown-menu-item dropdown-menu-item--IsControl="true" dropdown-menu-item--id="back-to-menu-5" dropdown-menu-item--IsDrillUp="true"}}Back to menu 2{{/dropdown-menu-item}}</li>
+              {{> divider divider--type="li"}}
+              <li>{{#> dropdown-menu-item}}Drilldown 1.3.1 List A{{/dropdown-menu-item}}</li>
+              <li>{{#> dropdown-menu-item}}Drilldown 1.3.2 List A{{/dropdown-menu-item}}</li>
+            {{/dropdown-submenu}}
+          </li>
+        {{/dropdown-submenu}}
+      </li>
+      <li>
+        {{#> dropdown-menu-item dropdown-menu-item--IsControl="true" dropdown-menu-item--id="back-to-menu-6"}}Drilldown 2 List B{{/dropdown-menu-item}}
+        {{#> dropdown-submenu dropdown-submenu--attribute='id="#2"' dropdown-submenu--modifier=""}}
+          <li>{{#> dropdown-menu-item dropdown-menu-item--IsControl="true" dropdown-menu-item--id="back-to-menu-7" dropdown-menu-item--IsDrillUp="true"}}Back to menu 1{{/dropdown-menu-item}}</li>
+          {{> divider divider--type="li"}}
+          <li>{{#> dropdown-menu-item}}Drilldown 2.1 List B{{/dropdown-menu-item}}</li>
+          <li>{{#> dropdown-menu-item}}Drilldown 2.2 List B{{/dropdown-menu-item}}</li>
+          <li>
+            {{#> dropdown-menu-item dropdown-menu-item--IsControl="true" dropdown-menu-item--id="back-to-menu-8"}}Drilldown 2.3 List B{{/dropdown-menu-item}}
+            {{#> dropdown-submenu  dropdown-submenu--attribute='id="#2.1"'}}
+              <li>{{#> dropdown-menu-item dropdown-menu-item--IsControl="true" dropdown-menu-item--id="back-to-menu-9" dropdown-menu-item--IsDrillUp="true"}}Back to menu 1 List B{{/dropdown-menu-item}}</li>
+              <li>{{#> dropdown-menu-item dropdown-menu-item--IsControl="true" dropdown-menu-item--id="back-to-menu-10" dropdown-menu-item--IsDrillUp="true"}}Back to menu 2 List B{{/dropdown-menu-item}}</li>
+              {{> divider divider--type="li"}}
+              <li>{{#> dropdown-menu-item}}Drilldown 2.3.1 List B{{/dropdown-menu-item}}</li>
+              <li>
+                {{#> dropdown-menu-item dropdown-menu-item--IsControl="true" dropdown-menu-item--id="back-to-menu-11"}}Drilldown 2.3.2 List B{{/dropdown-menu-item}}
+                {{#> dropdown-submenu  dropdown-submenu--attribute='id="#2.1.1"'}}
+                  <li>{{#> dropdown-menu-item dropdown-menu-item--IsControl="true" dropdown-menu-item--id="back-to-menu-12" dropdown-menu-item--IsDrillUp="true"}}Back to menu 1 List B{{/dropdown-menu-item}}</li>
+                  <li>{{#> dropdown-menu-item dropdown-menu-item--IsControl="true" dropdown-menu-item--id="back-to-menu-13" dropdown-menu-item--IsDrillUp="true"}}Back to menu 2 List B{{/dropdown-menu-item}}</li>
+                  {{> divider divider--type="li"}}
+                  <li>{{#> dropdown-menu-item}}Drilldown 2.3.3{{/dropdown-menu-item}}</li>
+                {{/dropdown-submenu}}
+              </li>
+            {{/dropdown-submenu}}
+          </li>
+        {{/dropdown-submenu}}
+      </li>
+      <li>{{#> dropdown-menu-item dropdown-menu-item--type="a" dropdown-menu-item--attribute='href="#"'}}Action 2{{/dropdown-menu-item}}</li>
+    {{/dropdown-submenu}}
+  {{/dropdown-menu-base}}
+{{/dropdown}}
+```
 
 ### Expanded
 ```hbs
@@ -226,8 +329,8 @@ The dropdown menu can contain either links or buttons, depending on the expected
 | `aria-expanded="true"` | `.pf-c-dropdown__toggle`, `.pf-c-dropdown__toggle-check`, `.pf-c-dropdown__toggle-button` |  Indicates that the menu is visible. |
 | `aria-label="Actions"` | `.pf-c-dropdown__toggle`, `.pf-c-dropdown__toggle-check`, `.pf-c-dropdown__toggle-button` | Provides an accessible name for the dropdown when an icon is used instead of text. **Required when icon is used with no supporting text**. |
 | `aria-hidden="true"` | `.pf-c-dropdown__toggle-icon`, `<i>`, `.pf-c-dropdown__toggle-check .pf-c-dropdown__toggle-text` | Hides the icon from assistive technologies. |
-| `hidden` | `.pf-c-dropdown__menu` | Indicates that the menu is hidden so that it isn't visible in the UI and isn't accessed by assistive technologies. |
-| `aria-labelledby="{toggle button id}"` | `.pf-c-dropdown__menu` | Gives the menu an accessible name by referring to the element that toggles the menu. |
+| `hidden` | `.pf-c-dropdown__menu`, `.pf-c-dropdown__submenu` | Indicates that the menu is hidden so that it isn't visible in the UI and isn't accessed by assistive technologies. |
+| `aria-labelledby="{toggle button id}"` | `.pf-c-dropdown__menu`, `.pf-c-dropdown__submenu` | Gives the menu an accessible name by referring to the element that toggles the menu. |
 | `aria-labelledby="{checkbox id} {toggle text id}"` | `.pf-m-split-button .pf-c-dropdown__toggle-check > input[type="checkbox"]` | Gives the checkbox an accessible name by referring to the element by which it is described. |
 | `disabled` | `.pf-c-dropdown__toggle`, `.pf-c-dropdown__toggle-button`, `.pf-c-dropdown__toggle-check > input[type="checkbox"]` | Disables the dropdown toggle and removes it from keyboard focus. |
 | `disabled` | `button.pf-c-dropdown__menu-item` | When the menu item uses a button element, indicates that it is unavailable and removes it from keyboard focus. |
@@ -249,10 +352,12 @@ The dropdown menu can contain either links or buttons, depending on the expected
 | `.pf-c-dropdown__menu-item-icon` | `<span>` | Defines the wrapper for the menu item icon. |
 | `.pf-c-dropdown__menu-item-description` | `<div>` | Defines the wrapper for the menu item description. |
 | `.pf-c-dropdown__menu-item-main` | `<div>` | Defines the wrapper for the menu item main element. Use when the description element is present. |
+| `.pf-c-dropdown__submenu` | `<ul>` | Defines a submenu wrapper. |
 | `.pf-c-dropdown__toggle-image` | `<span>` | Defines the wrapper for the dropdown toggle button image. |
 | `.pf-c-dropdown__menu-item` | `<button>` | Defines a menu item that performs an action on the current page. |
 | `.pf-c-dropdown__group` | `<section>` | Defines a group of items in a dropdown. **Required when there is more than one group in a dropdown**. |
 | `.pf-c-dropdown__group-title` | `<h1>` | Defines the title for a group of items in the dropdown menu. |
+| `.pf-m-drilldown` | `.pf-c-dropdown` | Enables drilldown styling. |
 | `.pf-m-expanded` | `.pf-c-dropdown` | Modifies for the expanded state. |
 | `.pf-m-top` | `.pf-c-dropdown` | Modifies to display the menu above the toggle. |
 | `.pf-m-align-right` | `.pf-c-dropdown__menu` | Modifies to display the menu aligned to the right edge of the toggle. |
@@ -264,5 +369,5 @@ The dropdown menu can contain either links or buttons, depending on the expected
 | `.pf-m-disabled` | `a.pf-c-dropdown__menu-item` | Modifies to display the menu item as disabled. This applies to `a.pf-c-dropdown__menu-item` and should not be used in lieu of the `disabled` attribute on `button.pf-c-dropdown__menu-item`. |
 | `.pf-m-disabled` | `div.pf-c-dropdown__toggle` | Modifies to display the dropdown toggle as disabled. This applies to `div.pf-c-dropdown__toggle` and should not be used in lieu of the `disabled` attribute on `button.pf-c-dropdown__toggle`. When this is used, `disabled` should also be added to any form elements in `div.pf-c-dropdown__toggle`. |
 | `.pf-m-icon` | `.pf-c-dropdown__menu-item` | Modifies an item to support adding an icon. |
-| `.pf-m-active` | `.pf-c-dropdown__toggle` | Modifies the dropdown menu toggle for the active state. |
+| `.pf-m-active` | `.pf-c-dropdown__toggle`, `.pf-c-dropdown__submenu` | Modifies the dropdown menu toggle for the active state. |
 | `.pf-m-description` | `.pf-c-dropdown__menu-item` | Modifies an item to support adding a description. |

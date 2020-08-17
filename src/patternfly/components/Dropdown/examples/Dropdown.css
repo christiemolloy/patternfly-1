@@ -45,3 +45,7 @@
 #ws-core-c-dropdown-dropdown-with-description {
   min-height: 400px;
 }
+
+#ws-core-c-dropdown-drilldown {
+  min-height: 250px;
+}

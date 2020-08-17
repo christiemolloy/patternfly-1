@@ -1,9 +1,35 @@
-<{{#if dropdown-menu-item--type}}{{dropdown-menu-item--type}}{{else}}button{{/if}} class="pf-c-dropdown__menu-item{{#if dropdown-menu-item--modifier}} {{dropdown-menu-item--modifier}}{{/if}}"
+<{{#if dropdown-menu-item--type}}{{dropdown-menu-item--type}}{{else}}button{{/if}} class="pf-c-dropdown__menu-item{{#if dropdown-menu-item--modifier}} {{dropdown-menu-item--modifier}}{{/if}}{{#if dropdown-menu-item--IsControl}} pf-m-control{{/if}}{{#if dropdown-menu-item--IsDrillUp}} pf-m-back{{/if}}"
   {{#unless dropdown-menu-item--type}}
     type="button"
   {{/unless}}
+  {{#if dropdown-menu-item--IsControl}}
+    id="{{dropdown--id}}-{{dropdown-menu-item--id}}"
+    aria-haspopup="true"
+    {{#if dropdown-menu-item--IsExpanded}}
+      aria-expanded="true"
+    {{else}}
+      aria-expanded="false"
+    {{/if}}
+    {{#if dropdown-menu-item--IsDrillUp}}
+      drill-up="drill-up"
+      {{!-- onClick=(drillUp()) --}}
+    {{else}}
+      drill-down="drill-down"
+      {{!-- onClick=(drillDown()) --}}
+    {{/if}}
+  {{/if}}
   {{#if dropdown-menu-item--attribute}}
     {{{dropdown-menu-item--attribute}}}
   {{/if}}>
-  {{> @partial-block}}
+  {{#if dropdown-menu-item--IsControl}}
+    {{#if dropdown-menu-item--IsDrillUp}}
+      <i className="fas fa-angle-left" aria-hidden="true" />
+      {{> @partial-block}}
+    {{else}}
+      {{> @partial-block}}
+      <i className="fas fa-angle-right" aria-hidden="true" />
+    {{/if}}
+  {{else}}
+    {{> @partial-block}}
+  {{/if}}
 </{{#if dropdown-menu-item--type}}{{dropdown-menu-item--type}}{{else}}button{{/if}}>

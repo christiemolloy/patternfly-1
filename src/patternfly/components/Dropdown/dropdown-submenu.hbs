@@ -1,0 +1,10 @@
+<ul class="pf-c-dropdown__submenu{{#if dropdown-submenu--modifier}} {{dropdown-submenu--modifier}}{{/if}}"
+  aria-labelledby="{{dropdown--id}}-button"
+  {{#if dropdown-submenu--attribute}}
+    {{{dropdown-submenu--attribute}}}
+  {{/if}}
+  {{#if dropdown-submenu--IsCollapsed}}
+    hidden
+  {{/if}}>
+  {{> @partial-block}}
+</ul>
